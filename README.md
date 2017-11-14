@@ -1,6 +1,6 @@
 # § Vue 权限控制
 
-> 在看本文档之前，您需要阅读 [Vue 另类状态管理](Vue 另类状态管理)
+> 在看本文档之前，您需要阅读 [Vue 另类状态管理](https://github.com/kenberkeley/vue-state-management-alternative)
 
 业界一向认为，权限只能是后端做  
 但如果在前后端分离的前提下仍是这样实现，那么前后端分离是没有任何意义的，还不如直接后端渲染实在
