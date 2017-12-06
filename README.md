@@ -183,3 +183,39 @@ export default [
 ## ⊙ 按钮级别控制
 
 基本就是把 `@/mixins/session` 引入到组件中就可以了，没有任何难度
+
+***
+***
+
+### 2017/12/6 针对 SegmentFault 下[评论](https://segmentfault.com/p/1210000012206425?_ea=2945405)的更新
+
+* 针对 `没有用动态路由，导致用户登录前不能初始化Vue应用，所以登陆页只能单独做，开始我也是这么做的，但始终觉得url跳转的体验不好，所以用动态路由解决了` 的解决方案：如果您的公司没有 SSO，那么每个项目都只能重复造轮子做登录页（之前我司就是如此），此时只能借助 `vue-router` 的钩子函数 `beforeEach` 控权：
+
+```js
+import { isLogin$ } from '@/mixins/session'
+const LOGIN_PATH = '/auth/login'
+
+export default function authInterceptor(to, from, next) {
+  if (isLogin$()) {
+    switch (to.path) {
+      case LOGIN_PATH:
+        next('/')
+        return
+      default:
+        next()
+    }
+  } else {
+    switch (to.path) {
+      case LOGIN_PATH:
+        next()
+        return
+      default:
+        next(`${LOGIN_PATH}?referrer=${encodeURIComponent(to.fullPath)}`)
+    }
+  }
+}
+
+// 使用方式：router.beforeEach(authInterceptor)
+```
+
+* 针对 `在前端路由文件中根据角色做判断的做法不够灵活，路由权限还是由后端分发给前端比较好，这样当需要修改角色权限时，后端改一下配置，前端刷新就生效了` 的回应：把我司现行完善的权限设计一股脑搬出来说没有意义，以上例子只是为了简要说明，更重要的是思想
